@@ -1,0 +1,7 @@
+# 私密与中间文件，不上传 GitHub
+config.py
+papers.json
+ranked.json
+picks.json
+__pycache__/
+*.pyc
