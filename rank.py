@@ -83,14 +83,14 @@ def main():
         ranked.append(item)
 
     ranked.sort(key=lambda x: x['score'], reverse=True)
-    picks = [x for x in ranked if x['score'] >= config.SCORE_THRESHOLD][:config.MAX_PICK]
+    picks = [x for x in ranked if x['score'] >= settings.SCORE_THRESHOLD][:settings.MAX_PICK]
 
     with open('ranked.json', 'w', encoding='utf-8') as f:
         json.dump(ranked, f, ensure_ascii=False, indent=2)
     with open('picks.json', 'w', encoding='utf-8') as f:
         json.dump(picks, f, ensure_ascii=False, indent=2)
 
-    print('\nAI 精选出 %d 篇（阈值 %d 分）：\n' % (len(picks), config.SCORE_THRESHOLD))
+    print('\nAI 精选出 %d 篇（阈值 %d 分）：\n' % (len(picks), settings.SCORE_THRESHOLD))
     for i, p in enumerate(picks, 1):
         print('%d. [%d分] %s' % (i, p['score'], p['title']))
         print('   ' + p['cn_summary'])

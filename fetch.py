@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 
 # ============ 你可以改的配置 ============
 CATEGORIES = ['cs.HC']          # 人机交互；想加可写 ['cs.HC','cs.GR','cs.CV']
-KEYWORDS = ['creativity']                   # 留 [] = 分类下全要；
+KEYWORDS = []                   # 留 [] = 分类下全要，候选全交给 AI 筛选；
                                 # 想只看某些主题可填 ['creativity','human-AI','visualization','VR']
 MAX_RESULTS = 40                # 每次最多拉多少篇（候选池）
 DAYS = 14                       # 只要最近多少天提交的
