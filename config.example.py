@@ -14,3 +14,26 @@ MAX_PICK = 12
 SENDER_EMAIL = "yourmail@qq.com"
 SENDER_AUTH_CODE = "你的SMTP授权码"
 RECEIVER_EMAIL = "yourmail@qq.com"
+
+
+# ============ 第 6 关：OpenAlex（正式出版论文） ============
+OPENALEX_KEY = "你的OpenAlex Key（openalex.org/settings/api）"
+OPENALEX_QUERIES = [
+    "human-AI collaborative design",
+    "generative AI creativity support tool",
+    "immersive VR AR interaction",
+    "human-computer interaction user study",
+]
+OPENALEX_DAYS = 365
+OPENALEX_PER_QUERY = 25
+
+
+# ============ 第 6 关：飞书推送（可选） ============
+FEISHU_WEBHOOK = "https://open.feishu.cn/open-apis/bot/v2/hook/xxxx"
+FEISHU_SECRET = "飞书签名校验密钥"
+
+
+# ============ 渠道开关 ============
+ENABLE_EMAIL = True
+ENABLE_FEISHU = True
+

@@ -16,9 +16,9 @@ MODEL = 'deepseek-chat'
 
 SYSTEM_PROMPT = (
     '你是一位资深的人机交互（HCI）领域科研编辑。'
-    '我会给你一批候选论文，每篇有编号、英文标题、英文摘要。'
+    '我会给你一批候选论文，每篇有编号、英文标题、英文摘要，可能还标注了发表会场（venue）。'
     '请依据用户的研究兴趣，判断每篇的相关性与质量：\n'
-    '1) score：0-10 的整数，10 表示高度相关且质量很高；\n'
+    '1) score：0-10 的整数，10 表示高度相关且质量很高；venue 为 CHI、UIST、CSCW、IEEE VR、TVCG 等顶级会议/期刊的，质量分可适当上浮；\n'
     '2) keep：当且仅当 score>=7、确实值得用户阅读时为 true；\n'
     '3) cn：一句不超过 40 个汉字的中文摘要，说清“做了什么 + 核心发现”。\n'
     '严格只返回 JSON，不要有多余文字，格式：\n'
@@ -35,6 +35,8 @@ def build_user_prompt(papers):
     lines = ['【用户研究兴趣】', settings.RESEARCH_INTEREST, '', '【候选论文】']
     for idx, p in enumerate(papers, 1):
         lines.append('[%d] 标题：%s' % (idx, p['title']))
+        if p.get('venue'):
+            lines.append('    会场：%s（%s）' % (p['venue'], p.get('source', '')))
         lines.append('    摘要：%s' % p['summary'][:700])
     return '\n'.join(lines)
 

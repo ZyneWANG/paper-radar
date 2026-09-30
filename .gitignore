@@ -3,5 +3,7 @@ config.py
 papers.json
 ranked.json
 picks.json
+openalex.json
+email.html
 __pycache__/
 *.pyc
