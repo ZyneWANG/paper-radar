@@ -2,7 +2,7 @@ name: paper-radar
 
 on:
   schedule:
-    - cron: '0 1 * * 1'        # 每周一 01:00 UTC（北京时间周一 09:00）自动运行
+    - cron: '0 23 * * 0'       # 每周日 23:00 UTC（北京时间周一 07:00）自动运行
   workflow_dispatch: {}        # 允许在 GitHub 网页手动触发
 
 permissions:
@@ -42,6 +42,8 @@ jobs:
           # 渠道开关
           ENABLE_EMAIL: ${{ secrets.ENABLE_EMAIL }}
           ENABLE_FEISHU: ${{ secrets.ENABLE_FEISHU }}
+          # 负向关键词
+          NEGATIVE_KEYWORDS: ${{ secrets.NEGATIVE_KEYWORDS }}
         run: python main.py
 
       - name: Commit seen state and web archive

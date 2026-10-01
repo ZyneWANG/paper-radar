@@ -24,29 +24,47 @@ def make_sign(secret, timestamp):
     return base64.b64encode(digest).decode('utf-8')
 
 
+def _stars(n):
+    n = max(0, min(5, int(n or 0)))
+    return '●' * n + '○' * (5 - n)
+
+
 def build_card(picks):
     today = date.today().isoformat()
     elements = [
         {"tag": "div", "text": {"tag": "lark_md",
-                                "content": "本期精选 **%d** 篇 · %s\n数据：arXiv + OpenAlex，DeepSeek 打分" % (len(picks), today)}},
+                                "content": "本期精选 **%d** 篇 · %s\n数据：arXiv + OpenAlex，DeepSeek 翻译、评分与导读" % (len(picks), today)}},
         {"tag": "hr"},
     ]
+    rating_keys = [('rel', '相关'), ('nov', '创新'), ('rig', '严谨'), ('imp', '启发')]
     for p in picks:
         venue = p.get('venue') or p.get('source') or ''
-        title = p['title'].replace('[', '(').replace(']', ')')
+        title = (p.get('cn_title') or p['title']).replace('[', '(').replace(']', ')')
         link = p.get('abs_url') or ''
-        md = "**[%d分] [%s](%s)**\n%s · %s\n%s" % (
+        rt = p.get('ratings', {}) or {}
+        parts, vals = [], []
+        for k, label in rating_keys:
+            v = int(rt.get(k, 0) or 0)
+            if v:
+                vals.append(v)
+            parts.append('%s%s%d' % (label, _stars(v), v))
+        avg = ('%.1f' % (sum(vals) / len(vals))) if vals else '-'
+        md = '**[%d分] [%s](%s)**\n%s · %s\n学术评分 **%s/5** ｜ %s\n中文导读：%s' % (
             p['score'], title, link, venue, p.get('published', ''),
-            p.get('cn_summary', ''))
+            avg, ' '.join(parts), p.get('cn_summary', ''))
+        if p.get('reason'):
+            md += '\n推荐理由：%s' % p['reason']
+        if p.get('connection'):
+            md += '\n关联思考：%s' % p['connection']
         elements.append({"tag": "div", "text": {"tag": "lark_md", "content": md}})
         elements.append({"tag": "hr"})
     elements.append({"tag": "note", "elements": [
         {"tag": "plain_text",
-         "content": "paper-radar 自动推送 · 标题可点查看原文，PDF 请用机构权限或开放获取链接"}]})
+         "content": "paper-radar 自动推送 · 标题可点查看原文；邮件/网页归档含英文原文摘要与完整评分"}]})
     return {
         "msg_type": "interactive",
         "card": {
-            "config": {"wide_screen_mode": True},
+            "config": {"wide_screen": True},
             "header": {
                 "title": {"tag": "plain_text", "content": "论文雷达 · AI×叙事×非遗周报"},
                 "template": "blue",

@@ -22,14 +22,14 @@ ISSUE_TPL = '''<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
 <table width="860" align="center" cellpadding="0" cellspacing="0"
        style="max-width:860px;background:#ffffff;border-radius:14px;overflow:hidden;">
   <tr><td style="background:#14345c;padding:22px 26px;">
-    <div style="font:bold 21px 'Microsoft YaHei',Arial;color:#fff;">论文雷达 · HCI 周报归档</div>
+    <div style="font:bold 21px 'Microsoft YaHei',Arial;color:#fff;">论文雷达 · AI×叙事×非遗 归档</div>
     <div style="font:13px Arial;color:#cdd9ec;padding-top:8px;">
       __DATE__ · 精选 __N__ 篇 · <a style="color:#cdd9ec" href="../index.html">&#8592; 返回归档首页</a></div>
   </td></tr>
   <tr><td style="height:16px;"></td></tr>
   __ROWS__
   <tr><td style="padding:8px 26px 24px;font:11px/1.7 Arial;color:#9aa3b2;">
-    paper-radar 自动归档 · 数据 arXiv + OpenAlex，DeepSeek 打分并撰写中文摘要，分数 &ge; __TH__ 入选。
+    paper-radar 自动归档 · 数据 arXiv + OpenAlex，DeepSeek 翻译、评分并撰写导读，整体相关度 &ge; __TH__ 入选。
   </td></tr>
 </table></body></html>'''
 
@@ -41,7 +41,7 @@ INDEX_TPL = '''<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
   <tr><td style="background:#14345c;padding:28px 26px;">
     <div style="font:bold 24px 'Microsoft YaHei',Arial;color:#fff;">论文雷达 · 归档首页</div>
     <div style="font:13px Arial;color:#cdd9ec;padding-top:10px;line-height:1.6;">
-      每周自动归档 HCI 精选论文 · 数据源 arXiv + OpenAlex</div>
+      每周自动归档 AI×叙事×非遗 精选论文 · 数据源 arXiv + OpenAlex</div>
   </td></tr>
   __LIST__
   <tr><td style="padding:18px 26px;font:11px Arial;color:#9aa3b2;">由 paper-radar 自动生成与维护</td></tr>
@@ -80,7 +80,7 @@ def main():
 
     meta = _load_meta()
     meta = [m for m in meta if m.get('file') != fname]
-    first = picks[0]['title'] if picks else '（本期无精选）'
+    first = (picks[0].get('cn_title') or picks[0]['title']) if picks else '（本期无精选）'
     meta.insert(0, {'date': today, 'file': fname, 'n': len(picks), 'first': first})
     meta = meta[:60]
     with open(META, 'w', encoding='utf-8') as f:

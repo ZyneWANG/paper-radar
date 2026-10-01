@@ -2,13 +2,7 @@
   {
     "date": "2026-10-01",
     "file": "2026-10-01.html",
-    "n": 4,
-    "first": "Encypher: Shared Agency and Social Presence in Collaborative Music Generation for Dance Cyphers"
-  },
-  {
-    "date": "2026-09-30",
-    "file": "2026-09-30.html",
-    "n": 9,
-    "first": "From Neurons to Conversation: Speech Brain-Computer Interfaces"
+    "n": 12,
+    "first": "多模态条件微调Stable Diffusion XL用于可控且文化忠实的Ulos图案生成"
   }
 ]
