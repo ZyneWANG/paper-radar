@@ -29,6 +29,8 @@ secrets = {
     # 渠道开关
     "ENABLE_EMAIL": str(config.ENABLE_EMAIL),
     "ENABLE_FEISHU": str(config.ENABLE_FEISHU),
+    # 负向关键词
+    "NEGATIVE_KEYWORDS": json.dumps(config.NEGATIVE_KEYWORDS, ensure_ascii=False),
 }
 
 for name, value in secrets.items():

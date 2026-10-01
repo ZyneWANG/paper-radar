@@ -42,6 +42,8 @@ def gather():
 
     # 3) 跨源合并去重
     merged = dedup.merge_dedup(arxiv, oa)
+    # 3.5) 负向关键词过滤（剔除博弈论/赌博/叙事医学/精酿啤酒等噪音）
+    merged = dedup.filter_negative(merged)
 
     # 4) 跨周去重（只保留没推过的）
     seen = dedup.load_seen()

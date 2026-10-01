@@ -12,20 +12,33 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 
 # ============ 你可以改的配置 ============
-CATEGORIES = ['cs.HC']          # 人机交互；想加可写 ['cs.HC','cs.GR','cs.CV']
-KEYWORDS = []                   # 留 [] = 分类下全要，候选全交给 AI 筛选；
-                                # 想只看某些主题可填 ['creativity','human-AI','visualization','VR']
-MAX_RESULTS = 40                # 每次最多拉多少篇（候选池）
-DAYS = 14                       # 只要最近多少天提交的
+CATEGORIES = ['cs.HC', 'cs.CL', 'cs.AI', 'cs.IR']
+KEYWORDS = []                   # 留 []；下面的布尔查询已经做了主题过滤
+MAX_RESULTS = 50                # 每次最多拉多少篇（候选池）
+DAYS = 21                       # 只要最近多少天提交的
 # =======================================
 
 ARXIV_API = 'http://export.arxiv.org/api/query'
 
+# 研究方向三簇：A=生成式AI，B=交互/游戏化叙事，C=非遗/文化遗产
+_A = ('all:"generative AI" OR all:"large language model" OR all:LLM OR '
+      'all:ChatGPT OR all:GenAI OR all:"AI agent" OR all:"generative agent"')
+_B = ('all:"interactive narrative" OR all:storytelling OR all:gamification OR '
+      'all:"serious game" OR all:"role-playing" OR all:NPC OR all:"conversational agent"')
+_C = ('all:"intangible cultural heritage" OR all:"cultural heritage" OR all:"digital heritage" '
+      'OR all:museum OR all:"traditional craft" OR all:handicraft')
+# arXiv 端先排除一部分高频噪音（其余负向词在本地过滤兜底）
+_NEG = ('all:"game theory" OR all:gambling OR all:nash OR all:lottery OR '
+        'all:cancer OR all:"narrative medicine" OR all:betting')
+
 
 def fetch_raw():
     cat_query = ' OR '.join('cat:' + c for c in CATEGORIES)
+    # A 且（B 或 C），再排除负向
+    full = '(%s) AND ((%s) AND ((%s) OR (%s))) AND NOT (%s)' % (
+        cat_query, _A, _B, _C, _NEG)
     qs = urllib.parse.urlencode({
-        'search_query': cat_query,
+        'search_query': full,
         'start': 0,
         'max_results': MAX_RESULTS,
         'sortBy': 'submittedDate',

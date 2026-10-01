@@ -45,6 +45,23 @@ def merge_dedup(*lists):
     return list(out.values())
 
 
+def filter_negative(papers):
+    """剔除标题/摘要命中负向关键词的候选（本地降噪）。"""
+    negs = [w.lower() for w in settings.NEGATIVE_KEYWORDS if w]
+    if not negs:
+        return papers
+    kept, dropped = [], 0
+    for p in papers:
+        blob = ((p.get('title') or '') + ' ' + (p.get('summary') or '')).lower()
+        if any(n in blob for n in negs):
+            dropped += 1
+            continue
+        kept.append(p)
+    if dropped:
+        print('负向词过滤：剔除 %d 篇，剩 %d 篇。' % (dropped, len(kept)))
+    return kept
+
+
 # ---------- 跨周去重 ----------
 def load_seen():
     if os.path.exists(settings.SEEN_FILE):

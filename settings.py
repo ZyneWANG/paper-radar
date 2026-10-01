@@ -44,8 +44,10 @@ def _list(name, default):
 DEEPSEEK_API_KEY = _val('DEEPSEEK_API_KEY', '')
 RESEARCH_INTEREST = _val(
     'RESEARCH_INTEREST',
-    '人机交互（HCI），尤其关注生成式AI与人机协同、AI辅助创意与设计工具、'
-    '信息可视化、VR/AR/混合现实、交互界面与用户研究、创造力支持工具。')
+    '研究方向：生成式AI × 交互/游戏化叙事 × 非物质文化遗产现代化传播的交叉领域。'
+    '关注生成式AI/大模型/生成式智能体的人机共创、交互式数字叙事/数字故事/游戏化/严肃游戏/'
+    '对话式智能体，以及这些技术对非遗与文化遗产的数字化传承、传播与教育，'
+    '并关注本真性、人的能动性、文化权利、偏见与文化同质化等伦理议题。')
 SCORE_THRESHOLD = int(_val('SCORE_THRESHOLD', '7'))
 MAX_PICK = int(_val('MAX_PICK', '12'))
 
@@ -57,13 +59,23 @@ RECEIVER_EMAIL = _val('RECEIVER_EMAIL', '')
 # ---- 第 6 关：OpenAlex（正式出版论文） ----
 OPENALEX_KEY = _val('OPENALEX_KEY', '')
 OPENALEX_QUERIES = _list('OPENALEX_QUERIES', [
-    'human-AI collaborative design',
-    'generative AI creativity support tool',
-    'immersive VR AR interaction',
-    'human-computer interaction user study',
+    # ① 精准档：生成式AI × 交互叙事/游戏 × 非遗
+    'generative AI interactive narrative intangible cultural heritage',
+    'large language model digital storytelling cultural heritage',
+    'generative AI serious game traditional craft heritage',
+    # ② 核心档：非遗/遗产 ×（AI 或 游戏化）
+    'intangible cultural heritage generative artificial intelligence',
+    'cultural heritage gamification game-based learning',
+    'digital heritage AI co-creation interactive',
+    # ③ 技术雷达档：生成式AI × 交互叙事/游戏
+    'generative AI interactive storytelling game',
+    'large language model role-playing NPC conversational agent',
+    # ④ 伦理档：文化遗产 × AI 伦理
+    'cultural heritage AI ethics authenticity human agency',
+    'intangible heritage generative AI cultural rights homogenization',
 ])
 OPENALEX_DAYS = int(_val('OPENALEX_DAYS', '365'))
-OPENALEX_PER_QUERY = int(_val('OPENALEX_PER_QUERY', '25'))
+OPENALEX_PER_QUERY = int(_val('OPENALEX_PER_QUERY', '12'))
 
 # ---- 第 6 关：飞书 ----
 FEISHU_WEBHOOK = _val('FEISHU_WEBHOOK', '')
@@ -72,6 +84,13 @@ FEISHU_SECRET = _val('FEISHU_SECRET', '')
 # ---- 第 6 关：渠道开关 ----
 ENABLE_EMAIL = _bool('ENABLE_EMAIL', True)
 ENABLE_FEISHU = _bool('ENABLE_FEISHU', True)
+
+# ---- 负向关键词：标题/摘要命中即剔除（本地降噪） ----
+NEGATIVE_KEYWORDS = _list('NEGATIVE_KEYWORDS', [
+    'game theory', 'game-theoretic', 'nash equilibrium', 'gambling', 'betting',
+    'lottery', 'gaming disorder', 'narrative medicine', 'narrative therapy',
+    'cancer', 'clinical trial', 'craft beer',
+])
 
 # ---- 第 6 关：文件位置 ----
 SEEN_FILE = 'seen.json'

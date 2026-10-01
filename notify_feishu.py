@@ -48,7 +48,7 @@ def build_card(picks):
         "card": {
             "config": {"wide_screen_mode": True},
             "header": {
-                "title": {"tag": "plain_text", "content": "论文雷达 · HCI 周报"},
+                "title": {"tag": "plain_text", "content": "论文雷达 · AI×叙事×非遗周报"},
                 "template": "blue",
             },
             "elements": elements,
@@ -57,17 +57,30 @@ def build_card(picks):
 
 
 def send_card(card):
-    url = settings.FEISHU_WEBHOOK
-    if settings.FEISHU_SECRET:
-        ts = int(time.time())
-        url = '%s?timestamp=%d&sign=%s' % (
-            url, ts, make_sign(settings.FEISHU_SECRET, ts))
-    body = json.dumps(card).encode('utf-8')
-    req = urllib.request.Request(
-        url, data=body,
-        headers={'Content-Type': 'application/json'}, method='POST')
-    with urllib.request.urlopen(req, timeout=40) as resp:
-        return json.loads(resp.read().decode('utf-8'))
+    # 飞书偶发返回签名/时间错误（19021），做最多 3 次重试，每次重新取时间戳并签名
+    last = None
+    for attempt in range(3):
+        url = settings.FEISHU_WEBHOOK
+        if settings.FEISHU_SECRET:
+            ts = int(time.time())
+            url = '%s?timestamp=%d&sign=%s' % (
+                url, ts, make_sign(settings.FEISHU_SECRET, ts))
+        body = json.dumps(card).encode('utf-8')
+        req = urllib.request.Request(
+            url, data=body,
+            headers={'Content-Type': 'application/json'}, method='POST')
+        try:
+            with urllib.request.urlopen(req, timeout=40) as resp:
+                r = json.loads(resp.read().decode('utf-8'))
+            if r.get('StatusCode', r.get('code', 0)) in (0, None):
+                if attempt:
+                    print('飞书第 %d 次尝试成功。' % (attempt + 1))
+                return r
+            last = r
+        except Exception as e:
+            last = {'error': str(e)}
+        time.sleep(2)
+    return last if last is not None else {'code': -1}
 
 
 def main():
